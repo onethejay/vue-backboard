@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
@@ -17,5 +16,5 @@ public class BoardDto implements Serializable {
     private String title;
     private String contents;
     private String author;
-    private LocalDateTime createdAt;
+    private String createdAt;
 }

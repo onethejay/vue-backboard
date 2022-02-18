@@ -1,13 +1,18 @@
 package com.example.vuebackboard.web;
 
 import com.example.vuebackboard.entity.BoardEntity;
+import com.example.vuebackboard.model.Header;
 import com.example.vuebackboard.services.BoardService;
 import com.example.vuebackboard.web.dtos.BoardDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -17,8 +22,9 @@ public class BoardController {
     private final BoardService boardService;
 
     @GetMapping("/board/list")
-    public ArrayList<BoardDto> boardList() {
-        return boardService.getBoardList();
+    public Header<List<BoardDto>> boardList(
+            @PageableDefault(sort = {"idx"}, direction = Sort.Direction.ASC, size = 20) Pageable pageable) {
+        return boardService.getBoardList(pageable);
     }
 
     @GetMapping("/board/{id}")

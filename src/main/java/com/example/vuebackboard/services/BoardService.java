@@ -2,11 +2,16 @@ package com.example.vuebackboard.services;
 
 import com.example.vuebackboard.entity.BoardEntity;
 import com.example.vuebackboard.entity.BoardRepository;
+import com.example.vuebackboard.model.Header;
+import com.example.vuebackboard.model.Pagination;
 import com.example.vuebackboard.web.dtos.BoardDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -20,20 +25,26 @@ public class BoardService {
     /**
      * 게시글 목록 가져오기
      */
-    public ArrayList<BoardDto> getBoardList() {
+    public Header<List<BoardDto>> getBoardList(Pageable pageable) {
         ArrayList<BoardDto> dtos = new ArrayList<>();
-        List<BoardEntity> boardEntities = boardRepository.findAll();
+        Page<BoardEntity> boardEntities = boardRepository.findAll(pageable);
         boardEntities.forEach(entity -> {
             dtos.add(BoardDto.builder()
                     .idx(entity.getIdx())
                     .title(entity.getTitle())
                     .contents(entity.getContents())
                     .author(entity.getAuthor())
-                    .createdAt(entity.getCreatedAt())
+                    .createdAt(entity.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss")))
                     .build());
         });
         Collections.reverse(dtos);  //역순 정렬
-        return dtos;
+        Pagination pagination = Pagination.builder()
+                .totalListCnt(dtos.size())
+                .page(pageable.getPageNumber() + 1)
+                .pageSize(pageable.getPageSize())
+                .build();
+
+        return Header.OK(dtos, pagination);
     }
 
     /**
@@ -46,7 +57,7 @@ public class BoardService {
                 .title(entity.getTitle())
                 .contents(entity.getContents())
                 .author(entity.getAuthor())
-                .createdAt(entity.getCreatedAt())
+                .createdAt(entity.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss")))
                 .build();
     }
 
@@ -69,7 +80,6 @@ public class BoardService {
     public BoardEntity update(BoardDto boardDto) {
         BoardEntity entity = boardRepository.findById(boardDto.getIdx()).orElseThrow(() -> new RuntimeException("게시글을 찾을 수 없습니다."));
         entity.setTitle(boardDto.getTitle());
-        entity.setAuthor(boardDto.getAuthor());
         entity.setContents(boardDto.getContents());
         return boardRepository.save(entity);
     }
