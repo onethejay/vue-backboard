@@ -6,6 +6,7 @@ import com.example.vuebackboard.model.Header;
 import com.example.vuebackboard.model.Pagination;
 import com.example.vuebackboard.web.dtos.BoardDto;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -13,9 +14,9 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class BoardService {
@@ -26,23 +27,23 @@ public class BoardService {
      * 게시글 목록 가져오기
      */
     public Header<List<BoardDto>> getBoardList(Pageable pageable) {
-        ArrayList<BoardDto> dtos = new ArrayList<>();
-        Page<BoardEntity> boardEntities = boardRepository.findAll(pageable);
-        boardEntities.forEach(entity -> {
-            dtos.add(BoardDto.builder()
-                    .idx(entity.getIdx())
-                    .title(entity.getTitle())
-                    .contents(entity.getContents())
-                    .author(entity.getAuthor())
-                    .createdAt(entity.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss")))
-                    .build());
-        });
-        Collections.reverse(dtos);  //역순 정렬
-        Pagination pagination = Pagination.builder()
-                .totalListCnt(dtos.size())
-                .page(pageable.getPageNumber() + 1)
-                .pageSize(pageable.getPageSize())
-                .build();
+        List<BoardDto> dtos = new ArrayList<>();
+
+        Page<BoardEntity> boardEntities = boardRepository.findAllByOrderByIdxDesc(pageable);
+        boardEntities.forEach(entity -> dtos.add(BoardDto.builder()
+                .idx(entity.getIdx())
+                .title(entity.getTitle())
+                .contents(entity.getContents())
+                .author(entity.getAuthor())
+                .createdAt(entity.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss")))
+                .build()));
+
+        Pagination pagination = new Pagination(
+                (int) boardEntities.getTotalElements()
+                , pageable.getPageNumber() + 1
+                , pageable.getPageSize()
+                , 10
+        );
 
         return Header.OK(dtos, pagination);
     }

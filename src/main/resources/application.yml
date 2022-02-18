@@ -2,6 +2,9 @@ server:
   port: 8081
 
 spring:
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+
   h2:
     console:
       enabled: true

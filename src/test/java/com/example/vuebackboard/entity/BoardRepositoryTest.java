@@ -27,9 +27,17 @@ class BoardRepositoryTest {
         Optional<BoardEntity> board = boardRepository.findById(1L);
 
         System.out.println(list);
-        System.out.println(board.get());
+    }
 
+    @DisplayName("2. 게시글 100개 생성")
+    @Test
+    void test_2(){
+        String sql;
 
+        for (int i = 1; i <= 100; i++) {
+            sql = "INSERT INTO BOARD (IDX, TITLE, CONTENTS, AUTHOR, CREATED_AT) VALUES (" + i + ", '게시글 제목" + i + "', '게시글 내용" + i + "', '작성자" + i + "', '2022-02-18 23:24:00');";
+            System.out.println(sql);
+        }
     }
 
 }

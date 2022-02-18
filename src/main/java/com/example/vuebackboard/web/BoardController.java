@@ -23,7 +23,7 @@ public class BoardController {
 
     @GetMapping("/board/list")
     public Header<List<BoardDto>> boardList(
-            @PageableDefault(sort = {"idx"}, direction = Sort.Direction.ASC, size = 20) Pageable pageable) {
+            @PageableDefault(sort = {"idx"}, direction = Sort.Direction.ASC) Pageable pageable) {
         return boardService.getBoardList(pageable);
     }
 
