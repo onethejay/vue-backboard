@@ -22,7 +22,8 @@ public class BoardController {
 
     @GetMapping("/board/list")
     public Header<List<BoardDto>> boardList(
-            @PageableDefault(sort = {"idx"}, direction = Sort.Direction.ASC) Pageable pageable) {
+            @PageableDefault(sort = {"idx"}) Pageable pageable
+    ) {
         return boardService.getBoardList(pageable);
     }
 
