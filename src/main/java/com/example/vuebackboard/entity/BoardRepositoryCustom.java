@@ -24,7 +24,7 @@ public class BoardRepositoryCustom {
         JPAQuery<BoardEntity> query = queryFactory.selectFrom(boardEntity)
                 .where(searchKeywords(searchCondition.getSk(), searchCondition.getSv()));
 
-        int total = (int) query.stream().count();   //여기서 전체 카운트 후 아래에서 조건작업
+        long total = query.stream().count();   //여기서 전체 카운트 후 아래에서 조건작업
 
         List<BoardEntity> results = query
                 .where(searchKeywords(searchCondition.getSk(), searchCondition.getSv()))
