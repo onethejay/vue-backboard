@@ -2,6 +2,7 @@ package com.example.vuebackboard.entity;
 
 import com.example.vuebackboard.model.SearchCondition;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -20,14 +21,19 @@ public class BoardRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
     public Page<BoardEntity> findAllBySearchCondition(Pageable pageable, SearchCondition searchCondition) {
-        List<BoardEntity> results = queryFactory.selectFrom(boardEntity)
+        JPAQuery<BoardEntity> query = queryFactory.selectFrom(boardEntity)
+                .where(searchKeywords(searchCondition.getSk(), searchCondition.getSv()));
+
+        int total = (int) query.stream().count();   //여기서 전체 카운트 후 아래에서 조건작업
+
+        List<BoardEntity> results = query
                 .where(searchKeywords(searchCondition.getSk(), searchCondition.getSv()))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .orderBy(boardEntity.idx.desc())
                 .fetch();
 
-        return new PageImpl<>(results, pageable, results.size());
+        return new PageImpl<>(results, pageable, total);
     }
 
     private BooleanExpression searchKeywords(String sk, String sv) {
