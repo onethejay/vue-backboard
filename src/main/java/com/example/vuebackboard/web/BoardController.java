@@ -25,7 +25,7 @@ public class BoardController {
             @PageableDefault(sort = {"idx"}) Pageable pageable,
             SearchCondition searchCondition
     ) {
-        return boardService.getBoardList(pageable);
+        return boardService.getBoardList(pageable, searchCondition);
     }
 
     @GetMapping("/board/{id}")

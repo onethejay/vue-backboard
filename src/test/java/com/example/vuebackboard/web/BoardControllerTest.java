@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -28,7 +29,7 @@ class BoardControllerTest {
                 .sv("작성자1")
                 .build();
 
-        List<BoardEntity> list = boardRepositoryCustom.findAllBySearchCondition(PageRequest.of(0, 20), searchCondition);
+        Page<BoardEntity> list = boardRepositoryCustom.findAllBySearchCondition(PageRequest.of(0, 20), searchCondition);
 
         list.forEach(System.out::println);
     }
