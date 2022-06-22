@@ -19,14 +19,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
-//    @Bean
-//    public AuthenticationManager authenticationManagerBean() throws Exception {
-//        return super.authenticationManagerBean();
-//    }
+    @Bean
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
+    }
 
-//    public void configure(AuthenticationManagerBuilder auth) throws Exception {
-//        auth.userDetailsService(null).passwordEncoder(passwordEncoder());
-//    }
+    public void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(null).passwordEncoder(passwordEncoder());
+    }
 
     public void configure(HttpSecurity http) throws Exception {
         http.csrf().disable().authorizeRequests() // 토큰을 활용하는 경우 모든 요청에 대해 접근이 가능하도록 함
