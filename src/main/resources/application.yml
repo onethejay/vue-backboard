@@ -20,3 +20,6 @@ spring:
     url: jdbc:mysql://127.0.0.1:3306/mydb?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=Asia/Seoul
     username: root
     password: password
+
+jwt:
+  secret: AAAABBBBCCCCDDDDEEEEFFFFGGGG123!@#
