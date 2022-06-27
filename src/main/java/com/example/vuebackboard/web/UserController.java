@@ -26,7 +26,9 @@ public class UserController {
     private final AuthenticationManager authenticationManager;
 
     @PostMapping("/login")
-    public ResponseEntity<Map<String, Object>> login(@RequestParam String userId, @RequestParam String userPw) {
+    public ResponseEntity<Map<String, Object>> login(@RequestBody Map<String, String> paramMap) {
+        String userId = paramMap.get("user_id");
+        String userPw = paramMap.get("user_pw");
 
         UserDetails loginUser = userService.loadUserByUsername(userId); //userId로 정보 가져오기
         
