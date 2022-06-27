@@ -32,24 +32,28 @@ public class TokenRequestFilter extends OncePerRequestFilter {
                 doFilter(request, response, filterChain);
             } else {
                 String token = parseJwt(request);
-                DecodedJWT tokenInfo = jwtUtil.decodeToken(token);
-                if (tokenInfo != null) {
-                    String userId = tokenInfo.getClaim("userId").asString();
-                    UserDetails loginUser = userService.loadUserByUsername(userId);
-                    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                            loginUser, null, loginUser.getAuthorities()
-                    );
-
-                    authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                    SecurityContextHolder.getContext().setAuthentication(authentication);
-                    doFilter(request, response, filterChain);
-
+                if (token == null) {
+                    response.sendError(403);    //accessDenied
                 } else {
-                    log.error("### Token is Null");
+                    DecodedJWT tokenInfo = jwtUtil.decodeToken(token);
+                    if (tokenInfo != null) {
+                        String userId = tokenInfo.getClaim("userId").asString();
+                        UserDetails loginUser = userService.loadUserByUsername(userId);
+                        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                                loginUser, null, loginUser.getAuthorities()
+                        );
+
+                        authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                        SecurityContextHolder.getContext().setAuthentication(authentication);
+                        doFilter(request, response, filterChain);
+
+                    } else {
+                        log.error("### TokenInfo is Null");
+                    }
                 }
             }
         } catch (Exception e) {
-            log.error("### Token is Null");
+            log.error("### Filter Exception {}", e.getMessage());
         }
     }
 
