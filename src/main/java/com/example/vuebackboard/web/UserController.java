@@ -41,9 +41,9 @@ public class UserController {
         String accessToken = jwtUtil.createToken(loginUser.getUsername(), loginUser.getUsername());     //accessToken 생성
 
         Map<String, Object> result = new HashMap<>();
-        result.put("userId", loginUser.getUsername());
-        result.put("accessToken", accessToken);
-        result.put("auth", loginUser.getAuthorities().stream().findFirst().get().getAuthority());
+        result.put("user_id", loginUser.getUsername());
+        result.put("user_token", accessToken);
+        result.put("user_role", loginUser.getAuthorities().stream().findFirst().get().getAuthority());
 
         return ResponseEntity.ok(result);
     }
