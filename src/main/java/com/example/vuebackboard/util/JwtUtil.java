@@ -27,7 +27,7 @@ public class JwtUtil {
 //        System.out.println("Current Date and Time : " + date.getTime());
         long timeInSecs = date.getTimeInMillis();
         Date afterAdding30Mins = new Date(timeInSecs + (30 * 60 * 1000));
-//        System.out.println("After adding 30 mins : " + afterAdding30Mins);
+        System.out.println("After adding 30 mins : " + afterAdding30Mins);
 
         return JWT.create()
                 .withIssuer("vue-board")
