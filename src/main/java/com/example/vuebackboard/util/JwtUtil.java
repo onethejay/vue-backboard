@@ -34,7 +34,7 @@ public class JwtUtil {
                 .withClaim("userId", userId)
                 .withClaim("userName", userName)
                 .withIssuedAt(date.getTime())
-                .withExpiresAt(afterAdding30Mins)
+//                .withExpiresAt(afterAdding30Mins)
                 .sign(algorithm);
     }
 
