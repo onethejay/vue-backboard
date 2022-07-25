@@ -12,6 +12,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import javax.transaction.Transactional;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
@@ -30,10 +32,11 @@ class UserRepositoryTest {
 
     @DisplayName("1. 유저 데이터 생성하기")
     @Test
+    @Transactional
     void test_1() {
         String encPassword = passwordEncoder.encode("test_password");
         UserEntity userEntity = UserEntity.builder()
-                .userId("test_user")
+                .userId("test_user11")
                 .userPw(encPassword)
                 .userName("테스트유저")
                 .build();
